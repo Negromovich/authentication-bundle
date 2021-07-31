@@ -1,0 +1,25 @@
+negromovich_authentication_login:
+    path: /auth/login
+    controller: Negromovich\AuthenticationBundle\Controller\LoginController::loginAction
+    methods: ['GET']
+
+negromovich_authentication_logout:
+    path: /auth/logout
+    controller: Negromovich\AuthenticationBundle\Controller\LoginController::logoutAction
+    methods: ['GET']
+
+negromovich_authentication_auth:
+    path: /auth/login
+    methods: ['POST']
+
+negromovich_authentication_admin_list:
+    path: /auth/admin/list
+    controller: Negromovich\AuthenticationBundle\Controller\AdminController::listAction
+
+negromovich_authentication_admin_create:
+    path: /auth/admin/create
+    controller: Negromovich\AuthenticationBundle\Controller\AdminController::createAction
+
+negromovich_authentication_admin_user:
+    path: /auth/admin/edit/{userId}
+    controller: Negromovich\AuthenticationBundle\Controller\AdminController::editAction

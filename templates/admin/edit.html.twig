@@ -1,0 +1,7 @@
+{% extends '@NegromovichAuthentication/admin/base.html.twig' %}
+{% form_theme form 'bootstrap_4_layout.html.twig' %}
+
+{% block content %}
+    <h1>Edit user "{{ user.username }}"</h1>
+    {{ form(form) }}
+{% endblock %}

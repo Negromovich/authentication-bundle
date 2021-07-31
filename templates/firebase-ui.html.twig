@@ -1,0 +1,47 @@
+<script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.2.9/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/ui/4.6.1/firebase-ui-auth.js"></script>
+
+<script>
+    (function() {
+        // Initialize Firebase
+        firebase.initializeApp({{ authConfig.app|json_encode|raw }});
+        var auth = firebase.auth();
+        var ui = new firebaseui.auth.AuthUI(auth);
+
+        {% if logoutTargetUrl is defined %}
+            auth.signOut().then(function() {
+                window.location.href = '{{ logoutTargetUrl }}';
+            })
+        {% else %}
+            start();
+        {% endif %}
+
+        function start() {
+            ui.start('{{ firebaseuiSelector|default(authConfig.uiSelector) }}', {{ authConfig.ui|json_encode|raw }});
+        }
+
+        auth.onAuthStateChanged(function (user) {
+            if (user) {
+                user.getIdToken().then(function(idToken) {
+                    signIn(idToken);
+                });
+            }
+        });
+
+        function signIn(idToken) {
+            let formData = new FormData();
+            formData.append('firebaseIdToken', idToken);
+
+            let xhr = new XMLHttpRequest();
+            xhr.open('POST', '{{ path(authConfig.authRoute) }}', false);
+            xhr.send(formData);
+
+            if (xhr.status === 200 && xhr.responseText === 'OK') {
+                window.location.href = '{{ authConfig.successRedirectRoute ? path(authConfig.successRedirectRoute) : '/' }}';
+            } else {
+                alert('Invalid sign in. Please try again or choose another provider.');
+            }
+        }
+    })();
+</script>
