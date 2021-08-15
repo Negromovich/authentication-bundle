@@ -38,7 +38,12 @@
             xhr.send(formData);
 
             if (xhr.status === 200 && xhr.responseText === 'OK') {
-                window.location.href = '{{ authConfig.successRedirectRoute ? path(authConfig.successRedirectRoute) : '/' }}';
+                let redirectUrl = xhr.getResponseHeader('x-redirect-url');
+                if (redirectUrl) {
+                    window.location.href = redirectUrl;
+                } else {
+                    window.location.href = '{{ authConfig.successRedirectRoute ? path(authConfig.successRedirectRoute) : '/' }}';
+                }
             } else {
                 alert('Invalid sign in. Please try again or choose another provider.');
             }

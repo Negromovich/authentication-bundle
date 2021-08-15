@@ -15,9 +15,12 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
+use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
 class FirebaseAuthenticator extends AbstractGuardAuthenticator
 {
+    use TargetPathTrait;
+
     private const FIREBASE_ID_TOKEN = 'firebaseIdToken';
 
     private AuthUserRepositoryInterface $authUserRepository;
@@ -81,7 +84,12 @@ class FirebaseAuthenticator extends AbstractGuardAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey): ?Response
     {
-        return new Response('OK');
+        $targetPath = $request->hasSession() ? $this->getTargetPath($request->getSession(), $providerKey) : null;
+        $headers = [];
+        if ($targetPath) {
+            $headers['X-Redirect-URL'] = $targetPath;
+        }
+        return new Response('OK', 200, $headers);
     }
 
     public function supportsRememberMe(): bool
