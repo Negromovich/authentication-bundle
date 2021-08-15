@@ -60,3 +60,20 @@ Routes example `config/routes/negromovich_authentication.yaml`:
 
     negromovich_authentication:
         resource: '@NegromovichAuthenticationBundle/config/routes.yaml'
+
+## Symfony < 5.1
+
+Modify your security config `config/packages/security.yaml`:
+
+    security:
+        firewalls:
+            main:
+                logout:
+                    success_handler: Negromovich\AuthenticationBundle\Security\FirebaseLogoutSuccessHandler
+
+Modify your bundle config `config/packages/negromovich_authentication.yaml`:
+
+    services:
+        Negromovich\AuthenticationBundle\Security\FirebaseLogoutSuccessHandler:
+            class: Negromovich\AuthenticationBundle\Security\FirebaseLogoutSuccessHandler
+            arguments: ['@Negromovich\AuthenticationBundle\Controller\LoginController']
