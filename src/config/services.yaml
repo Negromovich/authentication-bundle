@@ -47,4 +47,8 @@ services:
             - { method: setContainer, arguments: [ '@service_container' ] }
         tags: [ 'controller.service_arguments' ]
 
-    Negromovich\AjaxFileBundle\Provider\FileObjectFactory: ~
+    Negromovich\AuthenticationBundle\Command\AddUserCommand:
+        arguments:
+            - ~
+            - '@Negromovich\AuthenticationBundle\Repository\AuthUserRepositoryInterface'
+        tags: ['console.command']
